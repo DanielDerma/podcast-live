@@ -1,7 +1,7 @@
-import clsx from 'clsx'
+import { useId, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useId, useState } from 'react'
+import clsx from 'clsx'
 
 import { AudioPlayer } from '@/components/player/AudioPlayer'
 import posterImage from '@/images/poster.png'
