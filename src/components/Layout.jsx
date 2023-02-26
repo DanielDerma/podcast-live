@@ -1,4 +1,6 @@
 import { useId, useState } from 'react'
+import { signIn, signOut, useSession } from 'next-auth/react'
+import useAudioRecorder from '@/hooks/useAudioRecorder'
 import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
@@ -107,6 +109,24 @@ function AboutSection(props) {
 }
 
 export function Layout({ children }) {
+  const { status } = useSession()
+  const { recording, startRecording, stopRecording } = useAudioRecorder()
+
+  const handleRecorder = () => {
+    if (!recording) {
+      startRecording()
+    } else {
+      stopRecording()
+    }
+  }
+
+  const handleSession = () => {
+    if (status === 'authenticated') {
+      signOut()
+    } else {
+      signIn()
+    }
+  }
   return (
     <>
       <div className="bg-slate-50 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-112 lg:items-start lg:overflow-y-auto xl:w-120">
@@ -136,11 +156,17 @@ export function Layout({ children }) {
             </a>
           </Link>
           <div className="mt-10 text-center lg:mt-12 lg:text-left">
-            <p className="text-xl font-bold text-slate-900">
+            <div className="flex justify-between text-xl font-bold text-slate-900">
               <Link href="/" legacyBehavior>
                 <a>Their Side</a>
               </Link>
-            </p>
+              <button
+                className="ml-2 rounded-lg bg-red-400 px-2"
+                onClick={handleRecorder}
+              >
+                Start Recording
+              </button>
+            </div>
             <p className="mt-3 text-lg font-medium leading-8 text-slate-700">
               Conversations with the most tragically misunderstood people of our
               time.
@@ -220,7 +246,7 @@ export function Layout({ children }) {
                 </Link>
               </li>
               <li className="flex">
-                <Link href="/" legacyBehavior>
+                <button onClick={handleSession}>
                   <a className="group flex items-center">
                     <svg
                       aria-hidden="true"
@@ -240,10 +266,14 @@ export function Layout({ children }) {
                         className="fill-white"
                       />
                     </svg>
-                    <span className="sr-only sm:hidden">RSS Feed</span>
-                    <span className="hidden sm:ml-3 sm:block">RSS Feed</span>
+                    <span className="sr-only sm:hidden">
+                      {status === 'authenticated' ? 'Logout' : 'Login'}
+                    </span>
+                    <span className="hidden sm:ml-3 sm:block">
+                      {status === 'authenticated' ? 'Logout' : 'Login'}
+                    </span>
                   </a>
-                </Link>
+                </button>
               </li>
             </ul>
           </section>
