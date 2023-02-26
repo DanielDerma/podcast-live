@@ -120,7 +120,7 @@ export function Layout({ children }) {
           </span>
         </div>
         <div className="relative z-10 mx-auto px-4 pb-4 pt-10 sm:px-6 md:max-w-2xl md:px-4 lg:min-h-full lg:flex-auto lg:border-x lg:border-slate-200 lg:py-12 lg:px-8 xl:px-12">
-          <Link href="/">
+          <Link href="/" legacyBehavior>
             <a
               className="relative mx-auto block w-48 overflow-hidden rounded-lg bg-slate-200 shadow-xl shadow-slate-200 sm:w-64 sm:rounded-xl lg:w-auto lg:rounded-2xl"
               aria-label="Homepage"
@@ -137,7 +137,7 @@ export function Layout({ children }) {
           </Link>
           <div className="mt-10 text-center lg:mt-12 lg:text-left">
             <p className="text-xl font-bold text-slate-900">
-              <Link href="/">
+              <Link href="/" legacyBehavior>
                 <a>Their Side</a>
               </Link>
             </p>
@@ -164,7 +164,7 @@ export function Layout({ children }) {
             <div className="h-px bg-gradient-to-r from-slate-200/0 via-slate-200 to-slate-200/0 lg:hidden" />
             <ul className="mt-4 flex justify-center space-x-10 text-base font-medium leading-7 text-slate-700 sm:space-x-8 lg:block lg:space-x-0 lg:space-y-4">
               <li className="flex">
-                <Link href="/">
+                <Link href="/" legacyBehavior>
                   <a className="group flex items-center">
                     <svg
                       aria-hidden="true"
@@ -178,7 +178,7 @@ export function Layout({ children }) {
                 </Link>
               </li>
               <li className="flex">
-                <Link href="/">
+                <Link href="/" legacyBehavior>
                   <a className="group flex items-center">
                     <svg
                       aria-hidden="true"
@@ -206,7 +206,7 @@ export function Layout({ children }) {
                 </Link>
               </li>
               <li className="flex">
-                <Link href="/">
+                <Link href="/" legacyBehavior>
                   <a className="group flex items-center">
                     <svg
                       aria-hidden="true"
@@ -220,7 +220,7 @@ export function Layout({ children }) {
                 </Link>
               </li>
               <li className="flex">
-                <Link href="/">
+                <Link href="/" legacyBehavior>
                   <a className="group flex items-center">
                     <svg
                       aria-hidden="true"

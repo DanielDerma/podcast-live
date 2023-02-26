@@ -62,7 +62,7 @@ function EpisodeEntry({ episode }) {
             id={`episode-${episode.id}-title`}
             className="mt-2 text-lg font-bold text-slate-900"
           >
-            <Link href={`/${episode.id}`}>
+            <Link href={`/${episode.id}`} legacyBehavior>
               <a>{episode.title}</a>
             </Link>
           </h2>
@@ -116,7 +116,7 @@ function EpisodeEntry({ episode }) {
             >
               /
             </span>
-            <Link href={`/${episode.id}`}>
+            <Link href={`/${episode.id}`} legacyBehavior>
               <a className="flex items-center text-sm font-bold leading-6 text-pink-500 hover:text-pink-700 active:text-pink-900">
                 Show notes
               </a>
