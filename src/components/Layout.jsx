@@ -110,8 +110,14 @@ function AboutSection(props) {
 
 export function Layout({ children }) {
   const { status } = useSession()
-  const { recording, handleRecorder } = useRecorderPlayer()
+  const { recording, handleRecorder2 } = useRecorderPlayer()
   const isSignedIn = status === 'authenticated'
+
+  const handleRecorder = async () => {
+    const res = await fetch('/api/upload')
+    const data = await res.json()
+    console.log(data)
+  }
 
   const handleSession = () => {
     if (isSignedIn) {
@@ -160,21 +166,16 @@ export function Layout({ children }) {
             </p>
           </div>
           {isSignedIn && (
-            <Link
-              // onClick={handleRecorder}
-              legacyBehavior
-              href="/live"
+            <button
+              onClick={handleRecorder}
+              className={`mt-4 w-full border-2 text-2xl tracking-widest ${
+                recording
+                  ? 'bg-red-600 text-white'
+                  : ' border-gray-400 bg-white text-gray-400'
+              }  p-2`}
             >
-              <a
-                className={`mt-4 flex w-full items-center justify-center   border-2 text-2xl tracking-widest ${
-                  recording
-                    ? 'bg-red-600 text-white'
-                    : ' border-gray-400 bg-white text-gray-400'
-                }  p-2`}
-              >
-                <p>ON AIR</p>
-              </a>
-            </Link>
+              ON AIR
+            </button>
           )}
           <AboutSection className="mt-12 hidden lg:block" />
           <section className="mt-10 lg:mt-12">

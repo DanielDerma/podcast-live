@@ -131,17 +131,22 @@ function EpisodeEntry({ episode }) {
                 Listen
               </span>
             </button>
-            <span
-              aria-hidden="true"
-              className="text-sm font-bold text-slate-400"
-            >
-              /
-            </span>
-            <Link href={`/${episode.id}`} legacyBehavior>
-              <a className="flex items-center text-sm font-bold leading-6 text-pink-500 hover:text-pink-700 active:text-pink-900">
-                Show notes
-              </a>
-            </Link>
+
+            {!episode.isLive && (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="text-sm font-bold text-slate-400"
+                >
+                  /
+                </span>
+                <Link href={`/${episode.id}`} legacyBehavior>
+                  <a className="flex items-center text-sm font-bold leading-6 text-pink-500 hover:text-pink-700 active:text-pink-900">
+                    Show notes
+                  </a>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </Container>
