@@ -1,12 +1,12 @@
-import { useId, useState } from 'react'
+import clsx from 'clsx'
 import { signIn, signOut, useSession } from 'next-auth/react'
-import useAudioRecorder from '@/hooks/useAudioRecorder'
 import Image from 'next/image'
 import Link from 'next/link'
-import clsx from 'clsx'
+import { useId, useState } from 'react'
 
 import { AudioPlayer } from '@/components/player/AudioPlayer'
 import posterImage from '@/images/poster.png'
+import { useRecorderPlayer } from '@/components/RecorderProvider'
 
 function random(length, min, max, seed = 1) {
   return Array.from({ length }).map(() => {
@@ -110,18 +110,11 @@ function AboutSection(props) {
 
 export function Layout({ children }) {
   const { status } = useSession()
-  const { recording, startRecording, stopRecording } = useAudioRecorder()
-
-  const handleRecorder = () => {
-    if (!recording) {
-      startRecording()
-    } else {
-      stopRecording()
-    }
-  }
+  const { recording, handleRecorder } = useRecorderPlayer()
+  const isSignedIn = status === 'authenticated'
 
   const handleSession = () => {
-    if (status === 'authenticated') {
+    if (isSignedIn) {
       signOut()
     } else {
       signIn()
@@ -156,22 +149,33 @@ export function Layout({ children }) {
             </a>
           </Link>
           <div className="mt-10 text-center lg:mt-12 lg:text-left">
-            <div className="flex justify-between text-xl font-bold text-slate-900">
+            <div className="text-xl font-bold text-slate-900">
               <Link href="/" legacyBehavior>
-                <a>Their Side</a>
+                <a className="">PODCAST LIVE</a>
               </Link>
-              <button
-                className="ml-2 rounded-lg bg-red-400 px-2"
-                onClick={handleRecorder}
-              >
-                Start Recording
-              </button>
             </div>
             <p className="mt-3 text-lg font-medium leading-8 text-slate-700">
               Conversations with the most tragically misunderstood people of our
               time.
             </p>
           </div>
+          {isSignedIn && (
+            <Link
+              // onClick={handleRecorder}
+              legacyBehavior
+              href="/live"
+            >
+              <a
+                className={`mt-4 flex w-full items-center justify-center   border-2 text-2xl tracking-widest ${
+                  recording
+                    ? 'bg-red-600 text-white'
+                    : ' border-gray-400 bg-white text-gray-400'
+                }  p-2`}
+              >
+                <p>ON AIR</p>
+              </a>
+            </Link>
+          )}
           <AboutSection className="mt-12 hidden lg:block" />
           <section className="mt-10 lg:mt-12">
             <h2 className="sr-only flex items-center font-mono text-sm font-medium leading-7 text-slate-900 lg:not-sr-only">
@@ -267,10 +271,10 @@ export function Layout({ children }) {
                       />
                     </svg>
                     <span className="sr-only sm:hidden">
-                      {status === 'authenticated' ? 'Logout' : 'Login'}
+                      {isSignedIn ? 'Logout' : 'Login'}
                     </span>
                     <span className="hidden sm:ml-3 sm:block">
-                      {status === 'authenticated' ? 'Logout' : 'Login'}
+                      {isSignedIn ? 'Logout' : 'Login'}
                     </span>
                   </a>
                 </button>

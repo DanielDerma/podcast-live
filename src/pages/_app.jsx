@@ -1,4 +1,5 @@
 import { AudioProvider } from '@/components/AudioProvider'
+import { RecorderProvider } from '@/components/RecorderProvider'
 import { Layout } from '@/components/Layout'
 import { SessionProvider } from 'next-auth/react'
 
@@ -12,9 +13,11 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <AudioProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <RecorderProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </RecorderProvider>
       </AudioProvider>
     </SessionProvider>
   )

@@ -24,17 +24,18 @@ export default function useAudioRecorder(): Recorder {
   }
 
   const stopRecording = () => {
-    recorder.stop()
-    recorder.onstop = (e) => {
-      recorder.stream.getTracks().forEach((track) => track.stop())
-    }
-    recorder.ondataavailable = async (e) => {
-      const blob = new Blob([e.data], { type: 'audio/mp3' })
-      const file = new File([blob], 'test.mp3', { type: 'audio/mp3' })
-      const url = URL.createObjectURL(file)
-      console.log(url)
-    }
-    setRecording(false)
+    return new Promise((resolve) => {
+      recorder.stop()
+      recorder.onstop = (e) => {
+        recorder.stream.getTracks().forEach((track) => track.stop())
+      }
+      recorder.ondataavailable = (e) => {
+        const blob = new Blob([e.data], { type: 'audio/mp3' })
+        const url = URL.createObjectURL(blob)
+        setRecording(false)
+        resolve(url)
+      }
+    })
   }
 
   return { startRecording, stopRecording, recording }
