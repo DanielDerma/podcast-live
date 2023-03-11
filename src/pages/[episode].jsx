@@ -22,6 +22,8 @@ export default function Episode({ episode }) {
   )
   let player = useAudioPlayer(audioPlayerData)
 
+  console.log(episode.content)
+
   return (
     <>
       <Head>

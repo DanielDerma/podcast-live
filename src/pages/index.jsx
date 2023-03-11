@@ -1,12 +1,14 @@
-import { useMemo } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useMemo } from 'react'
 import { parse } from 'rss-to-json'
 
 import { useAudioPlayer } from '@/components/AudioProvider'
+import { useRecorderPlayer } from '@/components/RecorderProvider'
 import { Container } from '@/components/Container'
 
 export default function Home({ episodes }) {
+  const { recording } = useRecorderPlayer()
   return (
     <>
       <Head>
@@ -26,9 +28,28 @@ export default function Home({ episodes }) {
           </h1>
         </Container>
         <div className="divide-y divide-slate-100 sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
-          {episodes.map((episode) => (
-            <EpisodeEntry key={episode.id} episode={episode} />
-          ))}
+          {[
+            recording && {
+              id: 'live',
+              title: 'Live',
+              published: new Date(),
+              description: 'Join to listen live',
+              audio: {
+                src: 'https://their-side-feed.vercel.app/episode-005.mp3',
+                type: 'audio/mpeg',
+              },
+              isLive: true,
+            },
+            ...episodes,
+          ]
+            .filter((episode) => episode)
+            .map((episode) => (
+              <EpisodeEntry
+                key={episode.id}
+                episode={episode}
+                isLive={episode.isLive}
+              />
+            ))}
         </div>
       </div>
     </>
@@ -62,7 +83,7 @@ function EpisodeEntry({ episode }) {
             id={`episode-${episode.id}-title`}
             className="mt-2 text-lg font-bold text-slate-900"
           >
-            <Link href={`/${episode.id}`}>
+            <Link href={`/${episode.id}`} legacyBehavior>
               <a>{episode.title}</a>
             </Link>
           </h2>
@@ -110,17 +131,22 @@ function EpisodeEntry({ episode }) {
                 Listen
               </span>
             </button>
-            <span
-              aria-hidden="true"
-              className="text-sm font-bold text-slate-400"
-            >
-              /
-            </span>
-            <Link href={`/${episode.id}`}>
-              <a className="flex items-center text-sm font-bold leading-6 text-pink-500 hover:text-pink-700 active:text-pink-900">
-                Show notes
-              </a>
-            </Link>
+
+            {!episode.isLive && (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="text-sm font-bold text-slate-400"
+                >
+                  /
+                </span>
+                <Link href={`/${episode.id}`} legacyBehavior>
+                  <a className="flex items-center text-sm font-bold leading-6 text-pink-500 hover:text-pink-700 active:text-pink-900">
+                    Show notes
+                  </a>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </Container>
@@ -131,21 +157,25 @@ function EpisodeEntry({ episode }) {
 export async function getStaticProps() {
   const feed = await parse('https://their-side-feed.vercel.app/api/feed')
 
+  const episodes = feed.items.map(
+    ({ id, title, description, enclosures, published }) => ({
+      id,
+      title: `${id}: ${title}`,
+      published,
+      description,
+      audio: enclosures.map((enclosure) => ({
+        src: enclosure.url,
+        type: enclosure.type,
+      }))[0],
+    })
+  )
+
+  console.log(episodes)
+
   return {
     props: {
-      episodes: feed.items.map(
-        ({ id, title, description, enclosures, published }) => ({
-          id,
-          title: `${id}: ${title}`,
-          published,
-          description,
-          audio: enclosures.map((enclosure) => ({
-            src: enclosure.url,
-            type: enclosure.type,
-          }))[0],
-        })
-      ),
+      episodes,
+      revalidate: 10,
     },
-    revalidate: 10,
   }
 }
