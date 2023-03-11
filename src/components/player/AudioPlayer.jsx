@@ -9,6 +9,7 @@ import { PlayButton } from '@/components/player/PlayButton'
 import { RewindButton } from '@/components/player/RewindButton'
 import { Slider } from '@/components/player/Slider'
 
+
 function parseTime(seconds) {
   let hours = Math.floor(seconds / 3600)
   let minutes = Math.floor((seconds - hours * 3600) / 60)
